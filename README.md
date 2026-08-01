@@ -6,18 +6,20 @@ Predicting loan default risk using multiple machine learning models and comparin
 
 ## Project Overview
 
-This project develops and evaluates multiple machine learning models to predict whether a borrower is likely to default on a loan. The objective is to identify high-risk applicants and support data-driven lending decisions.
+This project develops and compares multiple machine learning models to predict loan default risk using the Kaggle Loan Default Prediction dataset.
 
 The project demonstrates an end-to-end machine learning workflow, including:
 
 - Data preprocessing
 - Exploratory Data Analysis (EDA)
 - Feature engineering
-- Model training
+- Model development
 - Hyperparameter tuning
 - Cross-validation
-- Model comparison
+- Performance evaluation
 - Model interpretation using SHAP
+
+The objective is to identify high-risk borrowers and support data-driven lending decisions for financial institutions.
 
 ---
 
@@ -28,7 +30,7 @@ Loan default prediction is a binary classification problem commonly encountered 
 Accurately identifying borrowers with a high probability of default enables financial institutions to:
 
 - Reduce credit risk
-- Improve loan approval decisions
+- Improve lending decisions
 - Minimize financial losses
 - Enhance risk management strategies
 
@@ -36,19 +38,19 @@ Accurately identifying borrowers with a high probability of default enables fina
 
 ## Dataset
 
+**Dataset**
+
+credit_risk_dataset.csv
+
 **Source**
 
 Kaggle Playground Series – Season 4 Episode 10
 
-**Competition**
-
-Loan Default Prediction
-
-https://www.kaggle.com/competitions/playground-series-s4e10
-
 **Target Variable**
 
 - loan_status
+
+The dataset contains borrower demographic information, financial characteristics, loan details, and historical credit records for predicting loan default risk.
 
 ---
 
@@ -76,26 +78,32 @@ https://www.kaggle.com/competitions/playground-series-s4e10
 
 ## 1. Data Preprocessing
 
-- Loaded and inspected the dataset
-- Checked missing values
-- Verified data types
-- Removed invalid records (e.g., applicants who started working before age 14)
-- Encoded categorical variables
+The following preprocessing steps were performed before model training:
+
+- Verified that the dataset contained no missing values
+- Removed applicants older than 100 years
+- Removed records where employment started before age 14
+- Converted categorical variables into numerical representations:
+  - person_home_ownership
+  - loan_intent
+  - loan_grade
+  - cb_person_default_on_file
+- Removed **loan_int_rate** because of its strong correlation with **loan_grade** to reduce multicollinearity.
 
 ---
 
 ## 2. Exploratory Data Analysis
 
-Performed exploratory data analysis to better understand feature distributions and relationships.
+Exploratory Data Analysis (EDA) was performed to understand feature distributions and relationships.
 
 Main analyses include:
 
+- Histograms for feature distributions
 - Boxplots for outlier detection
 - Correlation analysis
 - Correlation heatmap
-- Feature distribution visualization
 
-Since **loan_int_rate** showed a very high correlation with **loan_grade**, it was removed to reduce multicollinearity before model training.
+The analysis showed that **loan_int_rate** was highly correlated with **loan_grade**, so the feature was removed before model training.
 
 ### Correlation Heatmap
 
@@ -110,12 +118,12 @@ The following machine learning models were trained and compared:
 - Logistic Regression
 - Decision Tree
 - Random Forest
+- Neural Network
 - Gradient Boosting Decision Tree (GBDT)
 - XGBoost
 - LightGBM
-- Neural Network (TensorFlow)
 
-Model optimization includes:
+Model optimization included:
 
 - Hyperparameter tuning
 - Grid Search
@@ -128,26 +136,26 @@ Model optimization includes:
 | Model | Training Accuracy | Test Accuracy |
 |------|------------------:|--------------:|
 | Logistic Regression | 89.12% | 89.45% |
-| Decision Tree | 94.43% | 94.13% |
-| Random Forest | 92.67% | 93.09% |
-| GBDT | 95.82% | **95.08%** |
+| Decision Tree | 94.35% | 94.14% |
+| Random Forest | 92.67% | 93.08% |
+| Neural Network | 92.98% | 86.06% |
+| GBDT | 95.82% | **95.07%** |
 | XGBoost | **96.31%** | 95.00% |
-| LightGBM | 95.07% | 94.72% |
-| Neural Network | - | 93.26% |
+| LightGBM | 95.07% | 94.71% |
 
 ---
 
 # Classification Metrics
 
-| Model | Precision | Recall | F1 Score | ROC-AUC |
-|------|----------:|--------:|---------:|--------:|
-| Logistic Regression | 74.34% | 38.53% | 50.76% | 0.87 |
-| Decision Tree | 87.10% | 68.56% | 76.73% | 0.92 |
-| Random Forest | 91.58% | 56.15% | 69.62% | 0.91 |
-| GBDT | **90.72%** | **72.51%** | **80.60%** | **0.96** |
-| XGBoost | 90.45% | 72.19% | 80.30% | 0.95 |
-| LightGBM | 88.72% | 71.66% | 79.29% | 0.95 |
-| Neural Network | 84.32% | 64.17% | 72.88% | - |
+| Model | Precision | Recall | F1 Score |
+|------|----------:|--------:|---------:|
+| Logistic Regression | 74.34% | 38.53% | 50.76% |
+| Decision Tree | 87.10% | 68.56% | 76.73% |
+| Random Forest | 91.58% | 56.15% | 69.62% |
+| Neural Network | 84.32% | 64.17% | 72.88% |
+| GBDT | **90.72%** | **72.51%** | **80.60%** |
+| XGBoost | 90.45% | 72.19% | 80.30% |
+| LightGBM | 88.72% | 71.66% | 79.29% |
 
 ---
 
@@ -155,34 +163,49 @@ Model optimization includes:
 
 | Model | Runtime (seconds) |
 |------|------------------:|
-| Decision Tree | **0.051** |
-| LightGBM | 0.081 |
-| XGBoost | 0.197 |
-| Logistic Regression | 0.243 |
-| Random Forest | 1.025 |
-| GBDT | 5.376 |
-| Neural Network | 105.368 |
+| Logistic Regression | 0.88 |
+| Decision Tree | 0.12 |
+| Random Forest | 2.05 |
+| Neural Network | 51.51 |
+| GBDT | 5.38 |
+| XGBoost | 0.20 |
+| LightGBM | **0.08** |
 
 ---
 
 ## ROC Curve Comparison
 
-The ROC curves compare the predictive performance of all machine learning models.
+The ROC curves compare the predictive performance of different machine learning models.
 
-GBDT achieved the highest ROC-AUC (0.96), while XGBoost and LightGBM produced comparable performance with significantly shorter training times.
+GBDT achieved the highest predictive accuracy, while XGBoost produced nearly identical performance with significantly faster training. LightGBM offered the best balance between prediction accuracy and computational efficiency.
 
 ![ROC Curve](images/roc_curve.png)
 
 ---
 
+# Model Interpretation
+
+To improve model transparency, SHAP (SHapley Additive exPlanations) was applied to tree-based models.
+
+The SHAP analysis showed that:
+
+- **person_income** was the most influential feature affecting model predictions.
+- **loan_grade** was the second most important predictor.
+- **person_home_ownership** and **loan_amnt** also contributed significantly.
+- **cb_person_cred_hist_length** and **cb_person_default_on_file** had relatively small impacts on prediction outcomes.
+
+SHAP helped explain how each feature influenced individual predictions and improved the interpretability of the machine learning models.
+
+---
+
 # Key Findings
 
-- Ensemble learning methods consistently outperformed traditional machine learning models.
-- GBDT achieved the highest overall predictive performance with **95.08%** testing accuracy and **80.60%** F1-score.
-- XGBoost achieved nearly identical performance while requiring substantially less training time.
-- LightGBM was the fastest ensemble model and maintained competitive predictive performance.
-- Correlation analysis and feature selection helped reduce multicollinearity before model training.
-- SHAP was applied to improve model interpretability and explain feature importance.
+- Ensemble learning models consistently outperformed traditional machine learning algorithms.
+- GBDT achieved the best predictive performance with **95.07%** testing accuracy and an **80.60%** F1-score.
+- XGBoost delivered nearly identical predictive performance while requiring significantly less training time.
+- LightGBM achieved the fastest runtime while maintaining competitive predictive accuracy.
+- Correlation analysis reduced multicollinearity by removing **loan_int_rate** before model training.
+- SHAP analysis identified **person_income** and **loan_grade** as the most influential features.
 
 ---
 
@@ -194,7 +217,6 @@ Loan-Default-Prediction
 ├── README.md
 ├── Final_Project.ipynb
 ├── Final_Project.html
-├── train.csv
 ├── requirements.txt
 │
 ├── images
@@ -208,10 +230,11 @@ Loan-Default-Prediction
 
 # Future Improvements
 
-- Address class imbalance using SMOTE or class weighting
-- Bayesian hyperparameter optimization
-- Deploy the best-performing model with Streamlit
-- Build an interactive dashboard for loan default prediction
+- Apply feature scaling and transform skewed variables where appropriate.
+- Improve preprocessing by handling outliers and feature distributions more systematically.
+- Improve model interpretability and fairness in lending decisions.
+- Deploy the best-performing model as a web application using Streamlit or Flask.
+- Build an automated prediction pipeline and monitoring system for model drift.
 
 ---
 
